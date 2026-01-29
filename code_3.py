@@ -26,7 +26,7 @@ S3 = np.random.uniform(-0.02, 0.02, N)
 S2 = np.full(N, S2_ratio)
 
 # Normalize S0
-current_S0 = np.sqrt(S12 + S22 + S32)
+current_S0 = np.sqrt(S1**2 + S2**2 + S3**2)
 S1 *= S0_initial / current_S0
 S2 *= S0_initial / current_S0
 S3 *= S0_initial / current_S0
@@ -47,40 +47,40 @@ S3_hist = np.zeros((N, N_iter))
 # -------------------------
 for k in range(N_iter):
     # Nonlinear coefficients
-    S0 = np.sqrt(S12 + S22 + S32)
-    r2 = S12 + S22 / eta
-    alpha = chi2 * eta * (S02 + (1 - 2*eta)*r2)
-    beta = 2 * chi2 * eta * (eta - 1)
+    S0 = np.sqrt(S1**2 + S2**2 + S3**2)
+    r2 = S1**2 + S2**2 / eta
+    alpha = chi**2 * eta * (S0**2 + (1 - 2*eta)*r2)
+    beta = 2 * chi**2 * eta * (eta - 1)
 
     # Predictor
     S1_star = S1 + L * V1
-    V1_star = V1 - L * (alpha * S1 + beta * S13)
+    V1_star = V1 - L * (alpha * S1 + beta * S1**3)
 
     S2_star = S2 + L * V2
-    V2_star = V2 - L * (alpha * S2 + beta * S23)
+    V2_star = V2 - L * (alpha * S2 + beta * S2**3)
 
     S3_star = S3 + L * V3
-    V3_star = V3 - L * (alpha * S3 + beta * S33)
+    V3_star = V3 - L * (alpha * S3 + beta * S3**3)
 
     # Corrector (trapezoidal)
     S1 += 0.5 * L * (V1 + V1_star)
-    V1 -= 0.5 * L * ((alpha * S1 + beta * S13) + (alpha * S1_star + beta * S1_star3))
+    V1 -= 0.5 * L * ((alpha * S1 + beta * S1**3) + (alpha * S1_star + beta * S1_star**3))
 
     S2 += 0.5 * L * (V2 + V2_star)
-    V2 -= 0.5 * L * ((alpha * S2 + beta * S23) + (alpha * S2_star + beta * S2_star3))
+    V2 -= 0.5 * L * ((alpha * S2 + beta * S2**3) + (alpha * S2_star + beta * S2_star**3))
 
     S3 += 0.5 * L * (V3 + V3_star)
-    V3 -= 0.5 * L * ((alpha * S3 + beta * S33) + (alpha * S3_star + beta * S3_star3))
+    V3 -= 0.5 * L * ((alpha * S3 + beta * S3**3) + (alpha * S3_star + beta * S3_star**3))
 
     # Feedback (uncoupled)
-    S0_new = np.sqrt(S12 + S22 + S32)
+    S0_new = np.sqrt(S1**2 + S2**2 + S3**2)
     f = S1 / (S0_new + 1e-12)
     S1 = a * S1 + b * f
     S2 = a * S2
     S3 = c * S3
 
     # Store normalized values
-    S0_hist[:, k] = np.sqrt(S12 + S22 + S32)
+    S0_hist[:, k] = np.sqrt(S1**2 + S2**2 + S3**2)
     S1_hist[:, k] = S1 / (S0_hist[:, k] + 1e-12)
     S2_hist[:, k] = S2 / (S0_hist[:, k] + 1e-12)
     S3_hist[:, k] = S3 / (S0_hist[:, k] + 1e-12)
