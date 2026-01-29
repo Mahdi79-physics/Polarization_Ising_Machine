@@ -23,7 +23,7 @@ S3 = np.random.uniform(-0.02, 0.02, N)
 
 # Normalize to have S0 = 1
 S0_initial = 1.0
-S0_current = np.sqrt(S12 + S22 + S32)
+S0_current = np.sqrt(S1**2 + S2**2 + S3**2)
 S1 = S1 * S0_initial / S0_current
 S2 = S2 * S0_initial / S0_current
 S3 = S3 * S0_initial / S0_current
@@ -44,12 +44,12 @@ S0_hist = np.zeros((N, N_iter))
 # -------------------------
 for k in range(N_iter):
     # Current S0
-    S0 = np.sqrt(S12 + S22 + S32)
+    S0 = np.sqrt(S1**2 + S2**2 + S3**2)
     
     # Coefficients
-    r2 = S12 + (S22)/eta
-    alpha = chi2 * eta * (S02 + (1 - 2*eta) * r2)
-    beta = 2 * chi2 * eta * (eta - 1)
+    r2 = S1**2 + (S2**2)/eta
+    alpha = chi**2 * eta * (S0**2 + (1 - 2*eta) * r2)
+    beta = 2 * chi**2 * eta * (eta - 1)
     
     # -------------------------
     # Predictor (Euler step)
@@ -58,16 +58,16 @@ for k in range(N_iter):
     S2_pred = S2 + L*S2_dot
     S3_pred = S3 + L*S3_dot
     
-    S1_dot_pred = S1_dot - L*(alpha*S1 + beta*S13)
-    S2_dot_pred = S2_dot - L*(alpha*S2 + beta*S23)
-    S3_dot_pred = S3_dot - L*(alpha*S3 + beta*S33)
+    S1_dot_pred = S1_dot - L*(alpha*S1 + beta*S1**3)
+    S2_dot_pred = S2_dot - L*(alpha*S2 + beta*S2**3)
+    S3_dot_pred = S3_dot - L*(alpha*S3 + beta*S3**3)
     
     # -------------------------
     # Corrector (trapezoidal)
     # -------------------------
-    S1_dot_new = S1_dot - 0.5*L*((alpha*S1 + beta*S13) + (alpha*S1_pred + beta*S1_pred3))
-    S2_dot_new = S2_dot - 0.5*L*((alpha*S2 + beta*S23) + (alpha*S2_pred + beta*S2_pred3))
-    S3_dot_new = S3_dot - 0.5*L*((alpha*S3 + beta*S33) + (alpha*S3_pred + beta*S3_pred3))
+    S1_dot_new = S1_dot - 0.5*L*((alpha*S1 + beta*S1**3) + (alpha*S1_pred + beta*S1_pred**3))
+    S2_dot_new = S2_dot - 0.5*L*((alpha*S2 + beta*S2**3) + (alpha*S2_pred + beta*S2_pred**3))
+    S3_dot_new = S3_dot - 0.5*L*((alpha*S3 + beta*S3**3) + (alpha*S3_pred + beta*S3_pred**3))
     
     S1 = S1 + L*S1_dot_new
     S2 = S2 + L*S2_dot_new
@@ -76,7 +76,7 @@ for k in range(N_iter):
     # -------------------------
     # Feedback (uncoupled)
     # -------------------------
-    S0 = np.sqrt(S12 + S22 + S32)
+    S0 = np.sqrt(S1**2 + S2**2 + S3**2)
     f = S1 / (S0 + 1e-12)
     
     S1 = a*S1 + b*f
@@ -84,7 +84,7 @@ for k in range(N_iter):
     S3 = c*S3
     
     # Store history
-    S0_hist[:, k] = np.sqrt(S12 + S22 + S32)
+    S0_hist[:, k] = np.sqrt(S1**2 + S2**2 + S3**2)
     S1_hist[:, k] = S1 / (S0_hist[:, k] + 1e-12)
     S2_hist[:, k] = S2 / (S0_hist[:, k] + 1e-12)
     S3_hist[:, k] = S3 / (S0_hist[:, k] + 1e-12)
