@@ -27,7 +27,7 @@ S3 = np.random.uniform(-0.7, 0.7, N)
 S2 = S2_ratio * np.ones(N)
 
 # Normalize S0
-current_S0 = np.sqrt(S12 + S22 + S32)
+current_S0 = np.sqrt(S1**2 + S2**2 + S3**2)
 S1 = S1 * S0_init / current_S0
 S2 = S2 * S0_init / current_S0
 S3 = S3 * S0_init / current_S0
@@ -43,17 +43,17 @@ S0_hist = np.zeros((N, N_iter))
 # -------------------------
 for k in range(N_iter):
     # Intensity
-    S0 = np.sqrt(S12 + S22 + S32) + 1e-12
+    S0 = np.sqrt(S1**2 + S2**2 + S3**2) + 1e-12
 
     # Nonlinear coefficients
-    r2 = S12 + (S22)/eta
-    alpha = chi2 * eta * (S02 + (1 - 2*eta) * r2)
-    beta  = 2 * chi2 * eta * (eta - 1)
+    r2 = S1**2 + (S2**2)/eta
+    alpha = chi**2 * eta * (S0**2 + (1 - 2*eta) * r2)
+    beta  = 2 * chi**2 * eta * (eta - 1)
 
     # Propagation (Eq.3)
-    S1L = S1 - L2 * (alpha*S1 + beta*S13)
-    S2L = S2 - L2 * (alpha*S2 + beta*S23)
-    S3L = S3 - L2 * (alpha*S3 + beta*S33)
+    S1L = S1 - L**2 * (alpha*S1 + beta*S1**3)
+    S2L = S2 - L**2 * (alpha*S2 + beta*S2**3)
+    S3L = S3 - L**2 * (alpha*S3 + beta*S3**3)
 
     # Feedback (per NPO, uncoupled)
     f = S1L / S0
@@ -64,7 +64,7 @@ for k in range(N_iter):
     S3 = c*S3L
 
     # Store normalized values
-    S0_new = np.sqrt(S12 + S22 + S32)
+    S0_new = np.sqrt(S1**2 + S2**2 + S3**2)
     S0_hist[:, k] = S0_new
     S1_hist[:, k] = S1 / S0_new
     S2_hist[:, k] = S2 / S0_new
