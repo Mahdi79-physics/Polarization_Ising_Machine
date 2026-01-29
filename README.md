@@ -71,11 +71,11 @@ We ran five different initializations to demonstrate how initial polarization co
 Initialization	Description	Final Polarization States
 | Initialization | Description        | Final Polarization States |
 |----------------|------------------|--------------------------|
-| 1              | Random initialization | ![Init 1](uncoupled_initializations/figures/code_1.png) |
-| 2              | Random initialization | ![Init 2](uncoupled_initializations/figures/code_2.png) |
-| 3              | Random initialization | ![Init 3](uncoupled_initializations/figures/code_3.png) |
-| 4              | Random initialization | ![Init 4](uncoupled_initializations/figures/code_4.png) |
-| 5              | Random initialization | ![Init 5](uncoupled_initializations/figures/code_5.png) |
+| 1              | Random initialization | ![Init 1](figures/code_1.png) |
+| 2              | Random initialization | ![Init 2](figures/code_2.png) |
+| 3              | Random initialization | ![Init 3](figures/code_3.png) |
+| 4              | Random initialization | ![Init 4](figures/code_4.png) |
+| 5              | Random initialization | ![Init 5](figures/code_5.png) |
 
 Observations:
 
